@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -6,9 +6,13 @@ import { AuthService } from '../auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent  {
+export class LoginComponent implements AfterViewInit {
 
   constructor(private auth: AuthService) { }
+
+  ngAfterViewInit(): void {
+    console.log('username is: ' + this.auth.user$.displayName);
+  }
 
   login(){
     this.auth.login();
