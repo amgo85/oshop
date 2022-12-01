@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';  
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { RouterModule } from '@angular/router';
 import { NgbModule, NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { CustomFormsModule } from 'ng2-validation';
+import { MaterialModule } from './material.module';
+//import { DataTableModule } from 'angular-4-data-table';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,7 +29,12 @@ import { AuthGuard } from './auth-guard.service';
 import { UserService } from './user.service';
 import { CookieService } from 'ngx-cookie-service';
 import { AdminAuthGuard } from './admin-auth-guard.service';
-
+import { ProductFormComponent } from './admin/product-form/product-form.component';
+import { ProductListTableComponent } from './products-list-table/prodlist-table.component'; 
+import { CategoryService } from './category.service';
+import { ProductService } from './product.service';
+import { ProductFilterComponent } from './products/product-filter/product-filter.component';
+import { ProductCardComponent } from './products/product-card/product-card.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,17 +46,24 @@ import { AdminAuthGuard } from './admin-auth-guard.service';
     MyOrdersComponent,
     AdminProductsComponent,
     AdminOrdersComponent,
-    
+    ProductFormComponent,
+    ProductListTableComponent,
+    ProductFilterComponent,
+    ProductCardComponent
   ],
   imports: [
     BrowserModule,
+    CommonModule,
+    FormsModule,
+    CustomFormsModule,
+    MaterialModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     NgbModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent },
+      { path: '', component: ProductsComponent },
       { path: 'products', component: ProductsComponent },
       { path: 'shopping-cart', component: ShoppingCartComponent },
       { path: 'login', component: LoginComponent },
@@ -55,6 +72,16 @@ import { AdminAuthGuard } from './admin-auth-guard.service';
       { path: 'my/orders', component: MyOrdersComponent, canActivate: [AuthGuard] },
       { path: 'order-success', component: OrderSuccessComponent, canActivate: [AuthGuard] },
       
+      { 
+        path: 'admin/products/new', 
+        component: ProductFormComponent, 
+        canActivate: [AuthGuard, AdminAuthGuard] 
+      },
+      { 
+        path: 'admin/products/:id', 
+        component: ProductFormComponent, 
+        canActivate: [AuthGuard, AdminAuthGuard] 
+      },
       { 
         path: 'admin/products', 
         component: AdminProductsComponent, 
@@ -73,6 +100,8 @@ import { AdminAuthGuard } from './admin-auth-guard.service';
     AuthGuard,
     AdminAuthGuard,
     UserService,
+    CategoryService,
+    ProductService,
     CookieService,
   ],
   bootstrap: [AppComponent]

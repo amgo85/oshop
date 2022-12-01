@@ -16,17 +16,19 @@ export class AppComponent implements OnDestroy {
 
   constructor(private userService: UserService, private auth: AuthService, private router: Router, private cookieS: CookieS){
     this.$subscription = auth.user$.subscribe((user: any) => {
-      if(user) {
-        userService.save(user);
-        //cookieS.setCookie();
-        let returnUrl = localStorage.getItem('returnUrl');
-        if(returnUrl == null)
-          router.navigateByUrl('/')
-        else 
-          router.navigateByUrl(returnUrl);
-      } else {
-        router.navigateByUrl('/login')
+      if(!user) {
+        router.navigateByUrl('/login');
+        return;
       }
+      
+      userService.save(user);
+      //cookieS.setCookie();
+      let returnUrl = localStorage.getItem('returnUrl');
+      if(returnUrl !== "")
+        localStorage.removeItem('returnUrl');
+      else 
+        router.navigateByUrl('/');
+      
     })
   }
 
